@@ -22,4 +22,4 @@ $ cd dotrc
 $ ./makesymlinks /home/stratus/dotrc
 
 It will create the necessary symlinks from ~/.<rc_file> to 
-/home/stratus/doctrc/<rc_file>
+/home/stratus/dotrc/<rc_file>
