@@ -1,27 +1,41 @@
-#!/bin/bash
+#!/usr/bin/env python
 #
 # makesymlinks
 # Gustavo Franco - <stratus@acm.org>
 
-RCS=".vimrc .gitconfig"
+RCS = ['.vimrc', '.gitconfig']
 
-if [ ! $1 ]; then
-  echo "Usage: makesymlinks <path to dotrc.git local copy>"
-  exit 1
-fi
-DOTRC=$1
+import os
+import sys
 
-for RC in $RCS; do
-  if [ -L "~/$RC" ]; then
-    echo "~/$RC is a symlink already, skipping."
-    continue
-  fi
-  if [ -d "~/$RC" ]; then
-    echo "~/$RC is a directory, skipping."
-    continue
-  fi
-  if [ -f "~/$RC" ]; then
-    mv ~/$RC ~/$RC.bak
-  fi
-  ln -s $DOTRC/$RC ~/$RC
-done
+
+def __getHomedir():
+  return os.getenv('HOME')
+
+
+def makesymlinks(repo_path):
+  homedir = __getHomedir()
+  if not homedir:
+    print 'Cannot define HOME environment variable, please set.'
+    sys.exit(1)
+
+  for rc in RCS:
+    local_rc = '%s/%s' % (homedir, rc)
+    repo_rc = '%s/%s' % (repo_path, rc)
+    if os.path.islink(local_rc):
+      print '%s is a symlink already, skipping.' % local_rc
+    elif os.path.isdir(local_rc):
+      print '%s is a directory, skipping.' % local_rc
+    else:
+      if os.path.isfile(local_rc):
+        os.rename(local_rc, '%s.bak') % local_rc
+      print 'Attempting to symlink %s to %s' % (local_rc, repo_rc)
+      os.symlink(repo_rc, local_rc)
+
+
+if __name__ == '__main__':
+  if not sys.argv[1:]:
+    print 'Usage: makesymlinks <path to dotrc.git local copy>'
+    sys.exit(2)
+
+  makesymlinks(sys.argv[1])
