@@ -3,13 +3,14 @@
 # makesymlinks
 # Gustavo Franco - <stratus@acm.org>
 
+RCS=".vimrc .gitconfig"
+
 if [ ! $1 ]; then
   echo "Usage: makesymlinks <path to dotrc.git local copy>"
   exit 1
 fi
-
 DOTRC=$1
-RCS=".vimrc .gitrc"
+
 for RC in $RCS; do
   if [ -L "~/$RC" ]; then
     echo "~/$RC is a symlink already, skipping."
