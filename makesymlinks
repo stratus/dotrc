@@ -3,7 +3,7 @@
 # makesymlinks
 # Gustavo Franco - <stratus@acm.org>
 
-RCS = ['.vimrc', '.gitconfig']
+RCS = ['.vimrc', '.gitconfig', '.screenrc']
 
 import os
 import sys

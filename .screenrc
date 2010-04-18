@@ -1,0 +1,13 @@
+# no copyright page.
+startup_message off
+# no audible bell.
+vbell off
+# detach on hangup.
+autodetach on
+
+defscrollback 10000
+defutf8 on
+nonblock on
+
+hardstatus alwayslastline
+hardstatus string '%{= kw}[ %{= kb}%H%{= kw} ][%= %{= kw}%?%-Lw%?%{= kW}%n*%f %t%?%?%{= kw}%?% +Lw%?%?%= ][ %{r}%l%{w} ]%{w}[%{r} %d/%m/%y %C %A %{w}]%{w}'
