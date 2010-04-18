@@ -9,12 +9,8 @@ import os
 import sys
 
 
-def __getHomedir():
-  return os.getenv('HOME')
-
-
 def makesymlinks(repo_path):
-  homedir = __getHomedir()
+  homedir = os.getenv('HOME')
   if not homedir:
     print 'Cannot define HOME environment variable, please set.'
     sys.exit(1)
