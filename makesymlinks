@@ -15,7 +15,7 @@
 # See the License for the specific language governing sharepermissions and
 # limitations under the License.
 
-RCS = ['.vimrc', '.gitconfig', '.screenrc']
+RCS = ['.vimrc', '.gitconfig', '.screenrc', '.bashrc', '.profile']
 
 import os
 import sys
