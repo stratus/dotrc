@@ -81,6 +81,8 @@ if [ -x /opt/local/bin/gdircolors ]; then
     #alias grep='grep --color=auto'
     #alias fgrep='fgrep --color=auto'
     #alias egrep='egrep --color=auto'
+else
+    alias ls='ls --color=auto'
 fi
 
 # some more ls aliases
