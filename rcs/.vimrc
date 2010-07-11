@@ -55,3 +55,8 @@ if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
 endif
 
+" tabs
+map <Leader>tc :tabnew<CR>
+map <Leader>tn :tabn<CR>
+map <Leader>tp :tabp<CR>
+
