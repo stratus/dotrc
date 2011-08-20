@@ -45,7 +45,7 @@ def makesymlinks(logger, repo_path):
       else:
         if os.path.isfile(local_rc):
           logger.debug('Renaming %s to %s.bak', local_rc, local_rc)
-          os.rename(local_rc, '%s.bak') % local_rc
+          os.rename(local_rc, '%s.bak' % local_rc)
         logger.info('Attempting to symlink %s to %s', local_rc, repo_rc)
         os.symlink(repo_rc, local_rc)
 
