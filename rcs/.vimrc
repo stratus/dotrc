@@ -60,3 +60,20 @@ map <Leader>tc :tabnew<CR>
 map <Leader>tn :tabn<CR>
 map <Leader>tp :tabp<CR>
 
+" indent
+set autoindent
+set smartindent
+
+" tab key
+set tabstop=2    " tab width is 2 spaces
+set shiftwidth=2 " 2 space indentation
+set expandtab	 " convert tabs into spaces
+
+" wrap lines at 80chars -- old school, but...
+set textwidth=80
+
+" show line numbers
+set number
+
+" highlight matching braces -- useful for c/cpp
+set showmatch
