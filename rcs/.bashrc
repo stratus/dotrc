@@ -86,9 +86,9 @@ else
 fi
 
 # some more ls aliases
-#alias ll='gls -l'
-#alias la='gls -A'
-#alias l='gls -CF'
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -98,3 +98,5 @@ if [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 export LC_ALL="en_US.UTF-8"
+export GOPATH="/home/stratus/go-crazy"
+export PATH="$PATH:${HOME}/bin:${HOME}/go/bin:${HOME}/go-crazy/bin:"
