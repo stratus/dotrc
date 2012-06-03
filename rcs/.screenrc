@@ -12,4 +12,6 @@ nonblock on
 # scrollback support
 termcapinfo xterm* ti@:te@
 
-hardstatus string "screen (%n: %t)"
+bind f eval "caption splitonly" "hardstatus ignore"
+bind F eval "caption always"    "hardstatus alwayslastline"
+hardstatus alwayslastline "%w"
