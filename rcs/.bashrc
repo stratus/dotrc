@@ -72,29 +72,10 @@ fi
 
 # enable color support of ls and also add handy aliases
 if [ -x /opt/local/bin/gdircolors ]; then
-#    eval "`/opt/local/bin/gdircolors -b ~/.dir_colors`"
     eval "`/opt/local/bin/gdircolors -b`"
     alias ls='gls --color=auto'
-    #alias dir='gdir --color=auto'
-    #alias vdir='gvdir --color=auto'
-
-    #alias grep='grep --color=auto'
-    #alias fgrep='fgrep --color=auto'
-    #alias egrep='egrep --color=auto'
 else
     alias ls='ls --color=auto'
-fi
-
-# some more ls aliases
-alias ll='ls -l'
-alias la='ls -A'
-alias l='ls -CF'
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f /opt/local/etc/bash_completion ]; then
-    . /opt/local/etc/bash_completion
 fi
 
 export LC_ALL="en_US.UTF-8"
