@@ -77,3 +77,6 @@ set number
 
 " highlight matching braces -- useful for c/cpp
 set showmatch
+
+" golang
+au BufRead,BufNewFile *.go       setlocal ft=go ts=8 sw=8 expandtab
