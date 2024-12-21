@@ -11,6 +11,7 @@ if [ ! -r ~/.tmux/.tmux.conf.local ]; then
     cd -
 fi
 
+
 # vim
 if [ ! -r ~/.vim_runtime/install_awesome_vimrc.sh ]; then
     cd ~
@@ -19,47 +20,24 @@ if [ ! -r ~/.vim_runtime/install_awesome_vimrc.sh ]; then
     cd -
 fi
 
+
 # brew
 which brew || (/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" )
-
 brew update
 
-which pipx || (brew install pipx)
+BREW_PACKAGES="pipx eza mtr pfetch golang git tree bat ripgrep tldr htop tmux jq yq"
+for p in $BREW_PACKAGES; do
+    which $p || (brew install $p)
+done
+
+# extras
 pipx install autopep8
-
-which eza || (brew install eza)
-
-which mtr || (brew install mtr)
-
-which pfetch || (brew install pfetch)
-
-which go || (brew install golang)
-
-which git || (brew install git)
 brew install git-lfs
-
-which tree || (brew install tree)
-
-which bat || (brew install bat)
-
-which rg || (brew install ripgrep)
-
-which tldr || (brew install tldr)
-
-which htop || (brew install htop)
-
-which tmux || (brew install tmux)
-
-which jq || (brew install jq)
-
-which yq || (brew install yq)
-
 brew install --cask zoom
 brew install --cask microsoft-teams
 
 
 # Mac
-
 # Finder: Show hidden files
 defaults write com.apple.finder AppleShowAllFiles YES
 
@@ -67,12 +45,6 @@ defaults write com.apple.finder AppleShowAllFiles YES
 defaults write com.apple.frameworks.diskimages auto-open-ro-root -bool true
 defaults write com.apple.frameworks.diskimages auto-open-rw-root -bool true
 defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
-
-# Activity Monitor: Visualize CPU usage in the Activity Monitor Dock icon
-defaults write com.apple.ActivityMonitor IconType -int 5
-
-# Temperature monitoring: https://beebom.com/how-check-cpu-temperature-mac/, https://fannywidget.com/
-brew install fanny
 
 # Finder: show path bar
 defaults write com.apple.finder ShowPathbar -bool true
