@@ -1,4 +1,4 @@
-Copyright (C) 2012 Gustavo Franco <stratus@acm.org>.
+Copyright (C) 2024 Gustavo Franco <stratus@acm.org>.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ Common usage is:
 
 $ git clone git://github.com/stratus/dotrc.git # read only
 $ cd dotrc
-$ ./makesymlinks /home/stratus/dotrc
+$ ./macos-cli-setup.sh
+$ ./makesymlinks
 
-It will create the necessary symlinks from ~/.<rc_file> to 
-/home/stratus/dotrc/<rc_file>
+It will create the necessary symlinks from ~/.<rc_file> to
+/home/stratus/dotrc/rcs/<rc_file>
