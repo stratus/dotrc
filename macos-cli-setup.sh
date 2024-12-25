@@ -4,20 +4,20 @@
 
 # tmux
 if [ ! -r ~/.tmux/.tmux.conf.local ]; then
-    cd ~
+    cd ~ || exit
     git clone https://github.com/gpakosz/.tmux.git
-    ln -s -f .tmux/.tmux.conf
+    ln -s -f .tmux/.tmux.conf .
     cp .tmux/.tmux.conf.local .
-    cd -
+    cd - || exit
 fi
 
 
 # vim
 if [ ! -r ~/.vim_runtime/install_awesome_vimrc.sh ]; then
-    cd ~
+    cd ~ || exit
     git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
     sh ~/.vim_runtime/install_awesome_vimrc.sh
-    cd -
+    cd - || exit
 fi
 
 
@@ -25,9 +25,9 @@ fi
 which brew || (/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" )
 brew update
 
-BREW_PACKAGES="pipx eza mtr pfetch golang git tree bat ripgrep tldr htop tmux jq yq"
+BREW_PACKAGES="pipx eza mtr pfetch golang git tree bat ripgrep tldr htop tmux jq yq shellcheck"
 for p in $BREW_PACKAGES; do
-    which $p || (brew install $p)
+    which "$p" || (brew install "$p")
 done
 
 # extras
