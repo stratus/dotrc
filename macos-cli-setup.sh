@@ -32,6 +32,7 @@ done
 
 # extras
 pipx install autopep8
+pipx install pre-commit
 brew install git-lfs
 brew install --cask zoom
 brew install --cask microsoft-teams
