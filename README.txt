@@ -15,12 +15,18 @@ Copyright (C) 2024 Gustavo Franco <stratus@acm.org>.
 dotrc is a git repository containing Gustavo Franco dotrc files and
 makesymlinks.
 
-Common usage is:
+Common usage:
 
-$ git clone git://github.com/stratus/dotrc.git # read only
+On a fresh macOS system, use bootstrap-my-mac to setup everything:
+  https://github.com/stratus/bootstrap-my-mac
+
+Or manually:
+$ git clone git@github.com:stratus/dotrc.git
 $ cd dotrc
-$ ./macos-cli-setup.sh
 $ ./makesymlinks
 
 It will create the necessary symlinks from ~/.<rc_file> to
-/home/stratus/dotrc/rcs/<rc_file>
+~/dotrc/rcs/<rc_file>
+
+Note: macos-cli-setup.sh has been removed. Use bootstrap-my-mac instead
+for complete system setup (Homebrew, tools, vim, tmux, etc.)
