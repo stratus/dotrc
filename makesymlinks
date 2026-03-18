@@ -30,26 +30,31 @@ def makesymlinks(logger):
 
     rcs_path = os.getenv('RCS_PATH')
     if not rcs_path:
-        rcs_path = '%s/%s' % (os.getcwd(), 'rcs')
+        rcs_path = os.path.join(os.getcwd(), 'rcs')
     logger.debug('rcs_path is set to %s', rcs_path)
 
-    for unused_root, unused_dirs, files in os.walk(rcs_path):
-        for rc in files:
-            local_rc = '%s/%s' % (homedir, rc)
-            repo_rc = '%s/%s' % (rcs_path, rc)
-            if os.path.islink(local_rc):
-                logger.info('%s is a symlink already, skipping.', local_rc)
-            elif os.path.isdir(local_rc):
-                logger.info('%s is a directory, skipping.', local_rc)
-            else:
+    for rc in os.listdir(rcs_path):
+        repo_rc = os.path.join(rcs_path, rc)
+        if not os.path.isfile(repo_rc):
+            logger.info('%s is not a regular file, skipping.', repo_rc)
+            continue
+        local_rc = os.path.join(homedir, rc)
+        if os.path.islink(local_rc):
+            logger.info('%s is a symlink already, skipping.', local_rc)
+        elif os.path.isdir(local_rc):
+            logger.info('%s is a directory, skipping.', local_rc)
+        else:
+            try:
                 if os.path.isfile(local_rc):
                     logger.debug('Renaming %s to %s.bak', local_rc, local_rc)
-                    os.rename(local_rc, '%s.bak' % local_rc)
+                    os.rename(local_rc, local_rc + '.bak')
                 logger.info(
                     'Attempting to symlink %s to %s',
                     local_rc,
                     repo_rc)
                 os.symlink(repo_rc, local_rc)
+            except OSError as e:
+                logger.error('Failed to link %s -> %s: %s', local_rc, repo_rc, e)
 
 
 if __name__ == '__main__':
