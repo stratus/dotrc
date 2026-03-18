@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 alias ls="eza"
 alias cat="bat"
 alias top="htop"
