@@ -18,16 +18,19 @@ dotrc
 A git repository containing Gustavo Franco's dotfiles and a symlink
 installer. Managed config files:
 
-  .bash_profile  - Login shell: Homebrew, macchina, PATH setup
-  .bashrc        - Interactive shell: aliases (eza, bat, htop, rg),
-                   fzf, direnv
-  .gitconfig     - Git settings
-  .screenrc      - GNU Screen configuration
+  .bash_profile    - Login shell: Homebrew, macchina, PATH setup
+  .bashrc          - Interactive shell: aliases (eza, bat, htop, rg),
+                     fzf, direnv
+  .gitconfig       - Git settings
+  .screenrc        - GNU Screen configuration
+  .tmux.conf.local - tmux overrides (gpakosz/.tmux framework)
+  .tmux-layout.sh  - tmux layout helper script
 
 Prerequisites
 -------------
 
   - Python 3
+  - Git (for tmux config bootstrap)
   - macOS with Homebrew (for full functionality)
 
 Optional CLI tools used in .bashrc aliases:
@@ -39,6 +42,8 @@ Optional CLI tools used in .bashrc aliases:
   - fzf (fuzzy finder)
   - direnv (per-directory environment)
   - macchina (system info on shell login)
+  - tmux (terminal multiplexer, config from gpakosz/.tmux)
+  - git (required for tmux config bootstrap)
 
 Install all optional tools via bootstrap-my-mac (see below).
 
@@ -61,7 +66,14 @@ Then reload your shell:
 How makesymlinks Works
 ----------------------
 
-The script walks through rcs/ and for each regular file:
+On first run, the script bootstraps tmux by cloning gpakosz/.tmux
+into ~/.tmux and symlinking ~/.tmux.conf to the upstream config.
+Your local overrides (.tmux.conf.local) are then symlinked from rcs/
+as with any other dotfile. To update the upstream tmux config later:
+
+  $ cd ~/.tmux && git pull
+
+The script then walks through rcs/ and for each regular file:
 
   1. If ~/.<file> is already a symlink — skips it
   2. If ~/.<file> is a directory — skips it

@@ -17,8 +17,42 @@
 
 import sys
 import os
+import subprocess
 import logging
 DEBUG = False
+
+TMUX_REPO = 'https://github.com/gpakosz/.tmux.git'
+
+
+def setup_tmux(logger, homedir):
+    """Bootstrap gpakosz/.tmux if not already cloned."""
+    tmux_dir = os.path.join(homedir, '.tmux')
+    tmux_conf = os.path.join(homedir, '.tmux.conf')
+
+    if not os.path.isdir(tmux_dir):
+        logger.info('Cloning %s into %s', TMUX_REPO, tmux_dir)
+        try:
+            subprocess.run(
+                ['git', 'clone', TMUX_REPO, tmux_dir],
+                check=True, capture_output=True, text=True)
+        except (subprocess.CalledProcessError, FileNotFoundError) as e:
+            logger.error('Failed to clone tmux repo: %s', e)
+            return
+    else:
+        logger.info('%s already exists, skipping clone.', tmux_dir)
+
+    # Ensure ~/.tmux.conf -> ~/.tmux/.tmux.conf (upstream's expected layout)
+    upstream_conf = os.path.join(tmux_dir, '.tmux.conf')
+    if os.path.islink(tmux_conf):
+        logger.info('%s is a symlink already, skipping.', tmux_conf)
+    elif os.path.isfile(tmux_conf):
+        logger.info('Renaming %s to %s.bak', tmux_conf, tmux_conf)
+        os.rename(tmux_conf, tmux_conf + '.bak')
+        os.symlink(upstream_conf, tmux_conf)
+        logger.info('Symlinked %s -> %s', tmux_conf, upstream_conf)
+    else:
+        os.symlink(upstream_conf, tmux_conf)
+        logger.info('Symlinked %s -> %s', tmux_conf, upstream_conf)
 
 
 def makesymlinks(logger):
@@ -32,6 +66,8 @@ def makesymlinks(logger):
     if not rcs_path:
         rcs_path = os.path.join(os.getcwd(), 'rcs')
     logger.debug('rcs_path is set to %s', rcs_path)
+
+    setup_tmux(logger, homedir)
 
     for rc in os.listdir(rcs_path):
         repo_rc = os.path.join(rcs_path, rc)

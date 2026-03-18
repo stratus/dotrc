@@ -3,6 +3,7 @@
 import os
 import importlib.util
 import importlib.machinery
+from unittest.mock import patch
 import pytest
 
 # Load makesymlinks as a module (it has no .py extension)
@@ -13,6 +14,7 @@ mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
 
 makesymlinks = mod.makesymlinks
+setup_tmux = mod.setup_tmux
 
 
 @pytest.fixture
@@ -24,7 +26,9 @@ def setup_env(tmp_path, monkeypatch):
     rcs.mkdir()
     monkeypatch.setenv("HOME", str(home))
     monkeypatch.setenv("RCS_PATH", str(rcs))
-    return home, rcs
+    # Patch setup_tmux so symlink tests don't trigger git clone
+    with patch.object(mod, "setup_tmux"):
+        yield home, rcs
 
 
 def _make_logger():
@@ -172,3 +176,99 @@ class TestEdgeCases:
         makesymlinks(_make_logger())
 
         assert (home / ".my config").is_symlink()
+
+
+class TestSetupTmux:
+    """Test the tmux bootstrap behavior."""
+
+    def test_clones_repo_when_missing(self, tmp_path):
+        home = tmp_path / "home"
+        home.mkdir()
+
+        with patch.object(mod.subprocess, "run") as mock_run:
+            setup_tmux(_make_logger(), str(home))
+
+        mock_run.assert_called_once()
+        args = mock_run.call_args
+        assert args[0][0] == ['git', 'clone', mod.TMUX_REPO, str(home / '.tmux')]
+
+    def test_skips_clone_when_dir_exists(self, tmp_path):
+        home = tmp_path / "home"
+        home.mkdir()
+        tmux_dir = home / ".tmux"
+        tmux_dir.mkdir()
+        (tmux_dir / ".tmux.conf").write_text("# upstream")
+
+        with patch.object(mod.subprocess, "run") as mock_run:
+            setup_tmux(_make_logger(), str(home))
+
+        mock_run.assert_not_called()
+
+    def test_creates_tmux_conf_symlink(self, tmp_path):
+        home = tmp_path / "home"
+        home.mkdir()
+        tmux_dir = home / ".tmux"
+        tmux_dir.mkdir()
+        (tmux_dir / ".tmux.conf").write_text("# upstream config")
+
+        with patch.object(mod.subprocess, "run"):
+            setup_tmux(_make_logger(), str(home))
+
+        link = home / ".tmux.conf"
+        assert link.is_symlink()
+        assert os.readlink(str(link)) == str(tmux_dir / ".tmux.conf")
+
+    def test_skips_tmux_conf_if_already_symlink(self, tmp_path):
+        home = tmp_path / "home"
+        home.mkdir()
+        tmux_dir = home / ".tmux"
+        tmux_dir.mkdir()
+        (tmux_dir / ".tmux.conf").write_text("# upstream")
+        # Create an existing symlink pointing elsewhere
+        other = tmp_path / "other.conf"
+        other.write_text("# other")
+        (home / ".tmux.conf").symlink_to(str(other))
+
+        with patch.object(mod.subprocess, "run"):
+            setup_tmux(_make_logger(), str(home))
+
+        # Should not overwrite existing symlink
+        assert os.readlink(str(home / ".tmux.conf")) == str(other)
+
+    def test_backs_up_existing_tmux_conf(self, tmp_path):
+        home = tmp_path / "home"
+        home.mkdir()
+        tmux_dir = home / ".tmux"
+        tmux_dir.mkdir()
+        (tmux_dir / ".tmux.conf").write_text("# upstream")
+        (home / ".tmux.conf").write_text("# old config")
+
+        with patch.object(mod.subprocess, "run"):
+            setup_tmux(_make_logger(), str(home))
+
+        assert (home / ".tmux.conf.bak").read_text() == "# old config"
+        assert (home / ".tmux.conf").is_symlink()
+
+    def test_handles_clone_failure(self, tmp_path):
+        home = tmp_path / "home"
+        home.mkdir()
+        import subprocess
+
+        with patch.object(mod.subprocess, "run",
+                          side_effect=subprocess.CalledProcessError(1, "git")):
+            # Should not raise
+            setup_tmux(_make_logger(), str(home))
+
+        # No symlink should be created since clone failed
+        assert not (home / ".tmux.conf").exists()
+
+    def test_handles_git_not_found(self, tmp_path):
+        home = tmp_path / "home"
+        home.mkdir()
+
+        with patch.object(mod.subprocess, "run",
+                          side_effect=FileNotFoundError("git not found")):
+            # Should not raise
+            setup_tmux(_make_logger(), str(home))
+
+        assert not (home / ".tmux.conf").exists()
