@@ -45,17 +45,12 @@ Optional CLI tools used in .bashrc aliases:
   - tmux (terminal multiplexer, config from gpakosz/.tmux)
   - git (required for tmux config bootstrap)
 
-Install all optional tools via bootstrap-my-mac (see below).
+Install optional tools via Homebrew: brew install eza bat htop ripgrep fzf direnv macchina tmux
 
 Quick Start
 -----------
 
-On a fresh macOS system, use bootstrap-my-mac for complete setup:
-  https://github.com/stratus/bootstrap-my-mac
-
-Or manually:
-
-  $ git clone git@github.com:stratus/dotrc.git
+  $ git clone https://github.com/stratus/dotrc.git
   $ cd dotrc
   $ ./makesymlinks
 
@@ -102,6 +97,3 @@ YAML validation, shellcheck.
 Run tests:
 
   $ python3 -m pytest test_makesymlinks.py -v
-
-Note: macos-cli-setup.sh has been removed. Use bootstrap-my-mac
-instead for complete system setup (Homebrew, tools, vim, tmux, etc.)

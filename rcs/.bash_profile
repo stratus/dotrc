@@ -9,4 +9,4 @@ macchina
 source ~/.bashrc
 
 # Created by `pipx` on 2024-12-25 22:33:18
-export PATH="$PATH:/Users/gfranco/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
